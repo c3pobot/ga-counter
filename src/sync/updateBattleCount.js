@@ -27,7 +27,10 @@ module.exports = async(info = {})=>{
       }
     }
     if(Object.values(battleCount)?.length > 0) info.battleCount = battleCount
-    if(info.battleCount) await mongo.set('gaMeta', { _id: +info.season }, info)
+    if(info.battleCount){
+      delete info._id
+      await mongo.set('gaMeta', { _id: +info.season }, info)
+    }
     if(info.battleCount?.KYBER?.total > 1000){
       let botSettings = (await mongo.find('botSettings', {_id: "1"}))[0]
       if(botSettings && botSettings['ga-'+info.mode] && info.season > botSettings['ga-'+info.mode]) await mongo.set('botSettings', {_id: "1"}, {['ga-'+info.mode]: +info.season})

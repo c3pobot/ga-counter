@@ -14,7 +14,7 @@ const setGlUnits = async(data = {})=>{
       let tempSet = new Set(obj.units)
       glUnits = tempSet
       if(data?.gameVersion){
-        log.info(`updated game data to ${gameVersion}`)
+        log.info(`updated game data to ${data.gameVersion}`)
         return
       }
       log.info(`updated game data`)

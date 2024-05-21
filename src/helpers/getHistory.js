@@ -13,12 +13,16 @@ const mapDuel = (duelResult = [])=>{
   })
 }
 const fetchHistory = async(bucket, file)=>{
-  if(!GA_HIST_OBJECT_STORAGE_ENDPOINT) return
-  let opts = { timeout: 30000, compress: true, method: 'GET' }
-  let res = await fetch(`${GA_HIST_OBJECT_STORAGE_ENDPOINT}:${bucket}/${file}.json`, opts)
-  if (res?.headers?.get('Content-Type')?.includes('application/json')) return await res.json()
-  if(e?.name && e.message) log.error({ error: e.name, message: e.message })
-  if(e.status) log.error(e)
+  try{
+    if(!GA_HIST_OBJECT_STORAGE_ENDPOINT) return
+    let opts = { timeout: 30000, compress: true, method: 'GET' }
+    let res = await fetch(`${GA_HIST_OBJECT_STORAGE_ENDPOINT}:${bucket}/${file}.json`, opts)
+    if (res?.headers?.get('Content-Type')?.includes('application/json')) return await res.json()
+  }catch(e){
+    if(e?.name && e.message) log.error({ error: e.name, message: e.message })
+    if(e.status) log.error(e.status)
+    log.error(e)
+  }
 }
 module.exports = async(bucket, file)=>{
   try{

@@ -15,7 +15,7 @@ const updateBotSettings = async(info = {})=>{
 }
 module.exports = async(info = {})=>{
   let startTime = Date.now(), endFound = false, count = 0, botSettingsUpdated
-  log.info(`running counter scan for ${info.season} ${info.date} ${info.league}`)
+  log.debug(`running counter scan for ${info.season} ${info.date} ${info.league}`)
   while(!endFound){
     let counters = {}, gaEvents = [], completed = []
     let players = await getPlayers(info)

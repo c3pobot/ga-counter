@@ -16,7 +16,7 @@ let consumer
 const cmdProcessor = (msg = {})=>{
   try{
     if(!msg.body || !msg.routingKey) return
-    if(msg.routingKey === DATA_ROUTING_KEY) updateDataList(msg.body)
+    if(msg.routingKey === DATA_ROUTING_KEY) setGlUnits(msg.body)
   }catch(e){
     log.error(e)
   }
