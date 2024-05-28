@@ -13,9 +13,15 @@ const updateBotSettings = async(info = {})=>{
   if(botSettings && botSettings['ga-'+info.mode] && info.season > botSettings['ga-'+info.mode]) await mongo.set('botSettings', {_id: "1"}, {['ga-'+info.mode]: +info.season})
   return true
 }
+let notify = {}
+
 module.exports = async(info = {})=>{
   let startTime = Date.now(), endFound = false, count = 0, botSettingsUpdated
   log.debug(`running counter scan for ${info.season} ${info.date} ${info.league}`)
+  if(info.season && !notify[info.season]){
+    notify[info.season] == 1
+    log.info(`running counter scan for ${info.season} ${info.date} ${info.league}`)
+  }
   while(!endFound){
     let counters = {}, gaEvents = [], completed = []
     let players = await getPlayers(info)

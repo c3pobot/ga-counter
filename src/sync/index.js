@@ -12,6 +12,6 @@ module.exports = async()=>{
     if(!gaEvents[i]?.leagues?.KYBER || !gaEvents[i]?.leaderboardScanComplete || gaEvents[i].counterScanComplete) continue
     if(!gaEvents[i]?.endTime > timeNow) continue
     await scan({ ...gaEvents[i], ...gaEvents[i].leagues.KYBER })
-    await updateBattleCount(gaEvents[i])
+    //await updateBattleCount(gaEvents[i])
   }
 }
