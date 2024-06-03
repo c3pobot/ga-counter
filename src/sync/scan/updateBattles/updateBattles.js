@@ -4,7 +4,7 @@ module.exports = (battles = [], history = {})=>{
   let res = { defenseResult: [] }
   for(let i in battles){
     let result = updateBattle(battles[i], battles, history)
-    if(result.key) res.defenseResult.push(result)
+    if(result?.key) res.defenseResult.push(result)
   }
   return res
 }
