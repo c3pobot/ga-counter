@@ -17,4 +17,5 @@ module.exports = async()=>{
     await scan({ ...gaEvents[i], ...gaEvents[i].leagues.KYBER })
     //await updateBattleCount(gaEvents[i])
   }
+  return true
 }
