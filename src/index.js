@@ -21,9 +21,9 @@ const checkMongo = ()=>{
 }
 const startSync = async()=>{
   try{
-    let syncTime = 60
+    let syncTime = 5
     let status = await sync()
-    if(status) syncTime = 120
+    if(status) syncTime = 60
     setTimeout(startSync, syncTime * 1000)
   }catch(e){
     log.error(e)

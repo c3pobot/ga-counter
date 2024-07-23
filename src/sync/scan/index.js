@@ -33,7 +33,7 @@ module.exports = async(info = {})=>{
       let res = updateBattles(gaHistory)
       if(res?.matchResult?.length > 0) gaEvents.push(res)
     })
-
+    if(!gaEvents || gaEvents?.length === 0) endFound = true
     if(gaEvents?.length > 0){
       await eachLimit(gaEvents, 100, async(gaEvent)=>{
         await mapEventResult(gaEvent, counters)
