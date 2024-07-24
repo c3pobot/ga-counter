@@ -35,7 +35,7 @@ const start = async()=>{
       queue: QUE_NAME,
       exchanges: exchanges,
       queueBindings: queueBindings,
-      queueOptions: { queue: QUE_NAME, durable: true, arguments: { 'x-queue-type': 'quorum', 'x-message-ttl': 6000 } }
+      queueOptions: { queue: QUE_NAME, durable: false, exclusive: true, arguments: { 'x-message-ttl': 6000 } }
     }, cmdProcessor)
     consumer.on('error', (err)=>{
       log.info(err)
