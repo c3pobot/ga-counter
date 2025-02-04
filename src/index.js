@@ -22,6 +22,7 @@ const checkData = ()=>{
   try{
     let status = gameData.status()
     if(status){
+      log.info('Starting sync ...')
       startSync()
       return
     }

@@ -7,16 +7,17 @@ const setGlUnits = async(data = {})=>{
   if(!obj.units) throw('Error getting faction galactic_legend...')
   let tempSet = new Set(obj.units)
   glUnits = tempSet
+  return true
 }
 const sync = async()=>{
   try{
     let gameData = (await mongo.find('botSettings', { _id: 'gameData' }, { version: 1 }))[0]
     if(!gameData?.version) throw('Error getting gameData...')
-    if(gameVersion !== gameData?.Version){
+    if(gameVersion !== gameData?.version){
       let status = await setGlUnits()
       if(status){
-        gameVersion = data.gameVersion
-        log.info(`updated gl-units to ${data.gameVersion}...`)
+        gameVersion = gameData.version
+        log.info(`updated gl-units to ${gameData.version}...`)
       }
     }
     setTimeout(sync, 10000)
