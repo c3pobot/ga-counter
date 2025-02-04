@@ -3,6 +3,7 @@ const sorter = require('json-array-sorter')
 const mongo = require('mongoclient')
 const scan = require('./scan')
 const checkComplete = require('./checkComplete')
+const checkIndexes = require('./checkIndexes')
 module.exports = async()=>{
   let gaEvents = await mongo.find('gaEvents', {})
   gaEvents = sorter([{ column: 'season', order: 'descending' }], gaEvents || [])
@@ -14,6 +15,7 @@ module.exports = async()=>{
     let status = await checkComplete(gaEvents[i])
     if(status) continue
     await scan({ ...gaEvents[i], ...gaEvents[i].leagues.KYBER })
+    await checkIndexes(gaEvents[i].season)
   }
   return true
 }
