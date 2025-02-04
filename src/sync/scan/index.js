@@ -27,8 +27,9 @@ module.exports = async(info = {})=>{
     let players = await getPlayers(info)
     if(!players || players?.length == 0) endFound = true
     await eachLimit(players, 80, async(playerId)=>{
-      let gaHistory = await getHistory(`ga-history-season-${info.season}`, `${playerId}-${info.key}`)
+      let gaHistory = await getHistory(`ga-history`, `${info.mode}/${playerId}`)
       if(!gaHistory?.matchResult || gaHistory.matchResult?.length == 0) return
+      if(gaHistory?.eventInstanceId !== info.eventInstanceId) return
       completed.push(playerId)
       let res = updateBattles(gaHistory)
       if(res?.matchResult?.length > 0) gaEvents.push(res)
@@ -45,7 +46,7 @@ module.exports = async(info = {})=>{
       await eachLimit(counters, 100, async(counter)=>{
         if(!counter?.key || !counter?.season) return
         counter.rate = Math.round(counter.win / (counter.total) * 100)
-        await mongo.set('gaCounter', {_id: counter.season+'-'+counter.key}, counter)
+        await mongo.set(`gaCounter-${counter.season}`, { _id: counter.key }, counter)
         count++
       })
     }

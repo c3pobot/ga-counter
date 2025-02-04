@@ -2,7 +2,6 @@
 const sorter = require('json-array-sorter')
 const mongo = require('mongoclient')
 const scan = require('./scan')
-const updateBattleCount = require('./updateBattleCount')
 const checkComplete = require('./checkComplete')
 module.exports = async()=>{
   let gaEvents = await mongo.find('gaEvents', {})
@@ -15,7 +14,6 @@ module.exports = async()=>{
     let status = await checkComplete(gaEvents[i])
     if(status) continue
     await scan({ ...gaEvents[i], ...gaEvents[i].leagues.KYBER })
-    //await updateBattleCount(gaEvents[i])
   }
   return true
 }
