@@ -1,5 +1,5 @@
 'use strict'
-const { checkGl } = require('src/helpers/checkGl')
+const { checkGl } = require('src/helpers/gameData')
 const sorter = require('json-array-sorter')
 module.exports = (battle = {})=>{
   let tempObj = { key: null, attackLeader: null, defendLeader: null, attackGl: false, defendGl: false, attackSquad: null, defendSquad: null, noLead: false }
