@@ -47,9 +47,25 @@ module.exports = (battle = {})=>{
         }
         if(!tempObj.attackGl) tempObj.attackGl = checkGl(attackUnits[i].baseId)
       }
+
+      if(tempObj.attackGl){
+        tempObj.key += `-attackGl`
+      }else{
+        tempObj.key += `-noAttackGl`
+      }
+      if(tempObj.defendGl){
+        tempObj.key += `-defendGl`
+      }else{
+        tempObj.key += `-noDefendGl`
+      }
+      if(tempObj.noLead) tempObj.key += `-noLead`
+      if(battle.attackUnitCount === 1) tempObj.key += `-singleAttacker`
+      if(battle.defendUnitCount === 1) tempObj.key += `-singleDefender`
       tempObj.key += '-'
       delete battle.attackerUnit
       delete battle.defenderUnit
+      delete battle.attackerDatacron
+      delete battle.defenderDatacron
       return {...battle, ...tempObj}
     }
   }
