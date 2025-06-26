@@ -17,7 +17,8 @@ const mapDuel = (duelResult = [])=>{
 module.exports = async(bucket, file)=>{
   try{
     let res = await fetch(`${S3_STORAGE_PUBLIC_URL}/${file}`, fetch_options)
-    console.log(res)
+    if(res?.message) log.info(res.message)
+    if(!res?.matchResult) return
     res.matchResult = res.matchResult.map(x=>{
       return {
         defenseResult: x.defenseResult.reduce((acc, current)=> acc.concat(mapDuel(current.duelResult)), [])

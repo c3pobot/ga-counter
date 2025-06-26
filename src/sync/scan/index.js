@@ -26,8 +26,8 @@ module.exports = async(info = {})=>{
     let counters = {}, gaEvents = [], completed = []
     let players = await getPlayers(info)
     if(!players || players?.length == 0) endFound = true
-    await eachLimit(players, 80, async(playerId)=>{
-      let gaHistory = await getHistory(`ga-history`, `${info.mode}/${playerId}`)
+    await eachLimit(players, 20, async(playerId)=>{
+      let gaHistory = await getHistory(`ga-history`, `${info.mode}/${playerId}.json`)
       if(!gaHistory?.matchResult || gaHistory.matchResult?.length == 0) return
       if(gaHistory?.eventInstanceId !== info.eventInstanceId) return
       completed.push(playerId)

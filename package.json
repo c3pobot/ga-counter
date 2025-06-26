@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "async": "^3.2.5",
+    "bottleneck": "^2.19.5",
     "json-array-sorter": "^0.0.5",
     "logger": "github:c3pobot/logger",
     "mongoclient": "github:c3pobot/mongoclient",
