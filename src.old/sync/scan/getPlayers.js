@@ -19,9 +19,9 @@ module.exports = async(gaEvent = {})=>{
   }
 
   let players = gaHistPlayers?.players?.filter(x=>historyComplete.has(x) && !completedCounter.has(x)) || []
-  log.debug(`${players?.length} available to scan...`)
+  if(players?.length > 0) log.debug(`${players?.length} available to scan...`)
   if(!players || players?.length == 0) return
-  if(players?.length > 200) players = players.slice(0, 200)
+  if(players?.length > 200) players = players.slice(0, 2000)
 
-  return players
+  return players || []
 }

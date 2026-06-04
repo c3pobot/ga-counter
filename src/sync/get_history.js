@@ -1,23 +1,27 @@
-'use strict'
-const log = require('logger')
-const fetch = require('./fetch')
-const S3_STORAGE_PUBLIC_URL = process.env.S3_STORAGE_PUBLIC_URL || "https://gahistory.c3po.wtf"
-const fetch_options = { headers: { 'Content-Type': 'application/json'}, timeout: 30000, compress: true, method: 'GET' }
-const mapUnits = (units = [])=>{
+import log from '../logger.js'
+
+const GA_CACHE_URI = process.env.GA_CACHE_URI || 'http://ga-cache:3000'
+async function parseResponse(r){
+  let contentType = r?.headers.get("content-type")
+  if(contentType && contentType?.indexOf("application/json") !== -1) return await r?.json()
+}
+
+function mapUnits(units = []){
   return units.map(x=>{
     return { baseId: x.definitionId?.split(':')[0], definitionId: x.definitionId, healthPercent: x.healthPercent, shieldPercent: x.shieldPercent, squadUnitType: x.squadUnitType }
   })
 }
-const mapDuel = (duelResult = [])=>{
+function mapDuel(duelResult = []){
   return duelResult.map(x=>{
     return { battleOutcome: x.battleOutcome, startTime: x.startTime, defenderDatacron: x.defenderDatacron, attackerDatacron: x.attackerDatacron, attackerUnit: mapUnits(x.attackerUnit), defenderUnit: mapUnits(x.defenderUnit) }
   })
 }
-
-module.exports = async(bucket, file)=>{
+export default async function(fileName){
   try{
-    let res = await fetch(`${S3_STORAGE_PUBLIC_URL}/${file}`, fetch_options)
-    if(res?.message) log.info(res.message)
+    if(!fileName) return
+    let opts = { headers: { 'Content-Type': 'application/json'}, signal: AbortSignal.timeout(30000), compress: true, method: 'GET' }
+    let r = await fetch(`${GA_CACHE_URI}/${fileName}`, opts)
+    let res = await parseResponse(r)
     if(!res?.matchResult) return
     res.matchResult = res.matchResult.map(x=>{
       return {

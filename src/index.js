@@ -1,46 +1,32 @@
-'use strict'
-const log = require('logger')
-const mongo = require('mongoclient')
-const sync = require('./sync')
-const gameData = require('./helpers/gameData')
-const checkMongo = ()=>{
+import log from './logger.js'
+import cache from './cache.js'
+import sync from './sync/index.js'
+import gameData from './game_data.js'
+
+function checkCache(){
   try{
-    let status = mongo.status()
+    let status = cache.status()
     if(status){
-      log.debug(`local mongo connection ready...`)
-      checkData()
-      return
+      log.info(`cache is ready...`)
+      return checkGameData()
     }
-    log.debug(`mongo connection(s) not ready....`)
-    setTimeout(checkMongo, 5000)
+    setTimeout(checkCache, 5000)
   }catch(e){
     log.error(e)
-    setTimeout(checkMongo, 5000)
+    setTimeout(checkCache, 5000)
   }
 }
-const checkData = ()=>{
+function checkGameData(){
   try{
     let status = gameData.status()
     if(status){
-      log.info('Starting sync ...')
-      startSync()
-      return
+      log.info(`game data is ready...`)
+      return sync.start()
     }
-    setTimeout(checkData, 5000)
+    setTimeout(checkCache, 5000)
   }catch(e){
     log.error(e)
-    setTimeout(checkData, 5000)
+    setTimeout(checkCache, 5000)
   }
 }
-const startSync = async()=>{
-  try{
-    let syncTime = 5
-    let status = await sync()
-    if(status) syncTime = 60
-    setTimeout(startSync, syncTime * 1000)
-  }catch(e){
-    log.error(e)
-    setTimeout(startSync, 5000)
-  }
-}
-checkMongo()
+checkCache()

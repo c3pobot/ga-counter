@@ -16,25 +16,34 @@ const updateBotSettings = async(info = {})=>{
 let notify = {}
 
 module.exports = async(info = {})=>{
-  let startTime = Date.now(), endFound = false, count = 0, botSettingsUpdated
-  log.debug(`running counter scan for ${info.season} ${info.date} ${info.league}`)
-  if(info.season && !notify[info.season]){
-    notify[info.season] == 1
-    log.info(`running counter scan for ${info.season} ${info.date} ${info.league}`)
-  }
+  let startTime = Date.now(), endFound = false, count = 0, botSettingsUpdated, scanned = 0
+
   while(!endFound){
     let counters = {}, gaEvents = [], completed = []
     let players = await getPlayers(info)
-    if(!players || players?.length == 0) endFound = true
-    await eachLimit(players, 20, async(playerId)=>{
+
+    if(!players || players?.length == 0){
+      endFound = true
+      break
+    }
+    if(info.season && !notify[info.season]){
+      notify[info.season] == 1
+      log.info(`running counter scan for ${info.season} ${info.date} ${info.league}`)
+    }
+    await eachLimit(players, 100, async(playerId)=>{
       let gaHistory = await getHistory(`ga-history`, `${info.mode}/${playerId}.json`)
+      console.log(gaHistory)
       if(!gaHistory?.matchResult || gaHistory.matchResult?.length == 0) return
       if(gaHistory?.eventInstanceId !== info.eventInstanceId) return
       completed.push(playerId)
       let res = updateBattles(gaHistory)
       if(res?.matchResult?.length > 0) gaEvents.push(res)
+      scanned++
     })
-    if(!gaEvents || gaEvents?.length === 0) endFound = true
+    if(!gaEvents || gaEvents?.length == 0){
+      endFound = true
+      break
+    }
     if(gaEvents?.length > 0){
       await eachLimit(gaEvents, 100, async(gaEvent)=>{
         await mapEventResult(gaEvent, counters)
@@ -57,5 +66,5 @@ module.exports = async(info = {})=>{
     if(count > 200 && !botSettingsUpdated) botSettingsUpdated = await updateBotSettings(info)
   }
   let timeDiff = (Date.now() - startTime) / 1000
-  log.debug(`finised counter scan for ${info.season} ${info.date} ${info.league} in ${timeDiff} seconds`)
+  if(scanned > 0) log.debug(`finised counter scan for ${info.season} ${info.date} ${info.league} in ${timeDiff} seconds`)
 }
