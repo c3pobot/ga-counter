@@ -6,6 +6,7 @@ import scan from './scan.js'
 async function sync(){
   try{
     let gaEvents = await updateCurrentModes()
+
     if(!gaEvents || gaEvents?.length == 0) return
 
     let gaEvent = await getCurrentEvent(gaEvents)
